@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Riwayat Cicilan</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Riwayat Cicilan</h1>
+    <label for="amount">Jumlah Pembayaran:</label>
+    <div class="input-group">
+      <input type="text" id="amount" placeholder="Masukkan jumlah pembayaran">
+      <button onclick="addPayment()">Tambah Pembayaran</button>
+    </div>
+    <div class="totals">
+      <p>Total Pembayaran: <span id="totalAmount">Rp 0.00</span></p>
+      <p>Sisa Cicilan: <span id="remainingAmount">Rp 0.00</span></p>
+      <label for="targetAmount">Target Cicilan: <span id="targetAmountDisplay">Rp 0.00</span></label>
+      <div class="input-group">
+        <input type="text" id="targetAmount" placeholder="Masukkan target cicilan" oninput="updateTargetDisplay(this.value)">
+        
+        <button onclick="setTarget()">Set Target</button>
+      </div>
+    </div>
+    <ul id="paymentList" class="payment-list"></ul>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
