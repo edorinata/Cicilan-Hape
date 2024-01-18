@@ -95,4 +95,10 @@ function setTarget() {
   }
 }
 
+// Hapus fungsi handleTargetInput
+// function handleTargetInput() {
+//   const targetInput = document.getElementById('targetAmount');
+//   updateTargetDisplay(targetInput.value);
+// }
+
 loadFromLocalStorage();
