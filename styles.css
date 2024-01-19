@@ -1,0 +1,90 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 20px;
+  background-color: #f4f4f4;
+}
+
+h1 {
+  color: #333;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+input, button {
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  cursor: pointer;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; /* Menyusun item dan tombol di sepanjang garis */
+  align-items: center; /* Mengatur posisi vertikal secara tengah */
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+li button {
+  background-color: red;
+  color: #fff;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  top: px;
+}
+
+.paymentamount {
+  color: #4caf50;
+  font-size: 120%;
+}
+
+li button:hover {
+  background-color: #c9302c;
+}
+
+#footer {
+  position: fixed;
+  bottom: 0;
+  left: 0; /* Tambahkan left: 0; untuk memastikan footer berada di sisi kiri */
+  width: 100%;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+#totalDisplay::before, #remainingDisplay::before {
+  content: '\2022';
+  color: #4caf50;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+#totalDisplay::before {
+  color: #428bca;
+}

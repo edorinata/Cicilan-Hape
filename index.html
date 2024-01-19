@@ -3,29 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css">
   <title>Riwayat Cicilan</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Riwayat Cicilan</h1>
-    <label for="amount">Jumlah Pembayaran:</label>
-    <div class="input-group">
-      <input type="text" id="amount" placeholder="Masukkan jumlah pembayaran">
-      <button onclick="addPayment()">Tambah Pembayaran</button>
-    </div>
-    <div class="totals">
-      <p>Total Pembayaran: <span id="totalAmount">Rp 0.00</span></p>
-      <p>Sisa Cicilan: <span id="remainingAmount">Rp 0.00</span></p>
-      <label for="targetAmount">Target Cicilan: <span id="targetAmountDisplay">Rp 0.00</span></label>
-      <div class="input-group">
-        <input type="text" id="targetAmount" placeholder="Masukkan target cicilan" oninput="updateTargetDisplay(this.value)">
-        
-        <button onclick="setTarget()">Set Target</button>
-      </div>
-    </div>
-    <ul id="paymentList" class="payment-list"></ul>
-  </div>
+  <h1>Riwayat Cicilan</h1>
+
+  <label for="totalAmount">Total yang Harus Dilunasi (IDR):</label>
+  <input type="number" id="totalAmount" placeholder="Masukkan jumlah total" step="10000">
+
+  <button onclick="setTotalAmount()">Set Total</button>
+
+  <label for="amount">Jumlah Pembayaran:</label>
+  <input type="number" id="amount" placeholder="Masukkan jumlah pembayaran">
+
+  <button onclick="addPayment()">Tambah Pembayaran</button>
+
+  <h2>Daftar Pembayaran:</h2>
+  <ul id="paymentList"></ul>
+
+  <footer id="footer">
+    <p id="totalDisplay"></p>
+    <p id="remainingDisplay"></p>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>

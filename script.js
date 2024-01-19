@@ -1,104 +1,80 @@
-let targetAmount = parseFloat(localStorage.getItem('targetAmount')) || 0;
+function formatCurrency(amount) {
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+}
+
+function setTotalAmount() {
+  const totalAmountInput = document.getElementById('totalAmount');
+  const parsedAmount = parseFloat(totalAmountInput.value);
+
+  if (isNaN(parsedAmount) || parsedAmount <= 0) {
+    alert('Masukkan jumlah yang valid.');
+    return;
+  }
+
+  localStorage.setItem('totalAmount', parsedAmount);
+  updatePaymentList();
+}
 
 function addPayment() {
   const amountInput = document.getElementById('amount');
-  const paymentList = document.getElementById('paymentList');
-  const totalAmountElement = document.getElementById('totalAmount');
-  const remainingAmountElement = document.getElementById('remainingAmount');
+  const amount = amountInput.value;
 
-  if (amountInput.value !== '') {
-    const amount = parseFloat(amountInput.value);
-    const date = new Date().toLocaleDateString('id-ID');
-
-    const listItem = document.createElement('li');
-    listItem.innerHTML = `<div><p><strong>Pembayaran:</strong> Rp ${new Intl.NumberFormat('id-ID').format(amount)}</p><p>${date}</p></div><button onclick="removePayment(this)">Hapus</button>`;
-    
-    paymentList.appendChild(listItem);
-    updateLocalStorage();
-    updateTotals();
-    amountInput.value = '';
-  } else {
-    alert('Masukkan jumlah pembayaran.');
+  if (amount.trim() === '' || isNaN(amount) || amount <= 0) {
+    alert('Masukkan jumlah pembayaran yang valid.');
+    return;
   }
-}
 
-function updateLocalStorage() {
-  const paymentList = document.getElementById('paymentList');
-  const payments = [];
-  for (const listItem of paymentList.children) {
-    const paymentData = {
-      amount: parseFloat(listItem.querySelector('p:first-child').textContent.match(/Rp (\d+\.\d+)/)[1].replace('.', '')),
-      date: listItem.querySelector('p:last-child').textContent
-    };
-    payments.push(paymentData);
-  }
+  const date = new Date();
+  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+
+  const payment = {
+    amount: parseFloat(amount),
+    date: formattedDate
+  };
+
+  let payments = JSON.parse(localStorage.getItem('payments')) || [];
+  payments.push(payment);
   localStorage.setItem('payments', JSON.stringify(payments));
+
+  updatePaymentList();
+  amountInput.value = '';
 }
 
-function loadFromLocalStorage() {
+function removePayment(index) {
+  let payments = JSON.parse(localStorage.getItem('payments')) || [];
+  payments.splice(index, 1);
+  localStorage.setItem('payments', JSON.stringify(payments));
+  updatePaymentList();
+}
+
+function updatePaymentList() {
   const paymentList = document.getElementById('paymentList');
+  paymentList.innerHTML = '';
+
   const payments = JSON.parse(localStorage.getItem('payments')) || [];
+  const totalAmount = parseFloat(localStorage.getItem('totalAmount')) || 0;
 
-  for (const paymentData of payments) {
+  payments.forEach((payment, index) => {
     const listItem = document.createElement('li');
-    listItem.innerHTML = `<div><p><strong>Pembayaran:</strong> Rp ${new Intl.NumberFormat('id-ID').format(paymentData.amount)}</p><p>${paymentData.date}</p></div><button onclick="removePayment(this)">Hapus</button>`;
+    listItem.classList.add('payment-item'); // Menambahkan kelas untuk mengatur tata letak
+    listItem.innerHTML = `${payment.date} <span class="paymentamount">${formatCurrency(payment.amount)}</span>`;
     
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Hapus';
+    deleteButton.onclick = () => removePayment(index);
+
+    listItem.appendChild(deleteButton);
     paymentList.appendChild(listItem);
-  }
-  updateTotals();
+});
+
+  const totalDisplay = document.getElementById('totalDisplay');
+  totalDisplay.textContent = `Total Cicilan: ${formatCurrency(totalAmount)}`;
+
+  const remainingDisplay = document.getElementById('remainingDisplay');
+  const remainingAmount = totalAmount - payments.reduce((sum, payment) => sum + payment.amount, 0);
+  remainingDisplay.textContent = `Sisa Pembayaran: ${formatCurrency(remainingAmount)}`;
 }
 
-function removePayment(button) {
-  if (confirm('Anda yakin ingin menghapus pembayaran ini?')) {
-    const listItem = button.parentNode;
-    listItem.remove();
-    updateLocalStorage();
-    updateTotals();
-  }
-}
-
-function updateTotals() {
-  const totalAmountElement = document.getElementById('totalAmount');
-  const remainingAmountElement = document.getElementById('remainingAmount');
-  const targetAmountElement = document.getElementById('targetAmountDisplay');
-
-  const paymentList = document.getElementById('paymentList');
-
-  let totalAmount = 0;
-  for (const listItem of paymentList.children) {
-    const amount = parseFloat(listItem.querySelector('p:first-child').textContent.match(/Rp (\d+\.\d+)/)[1].replace('.', ''));
-    totalAmount += amount;
-  }
-
-  totalAmountElement.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(totalAmount)}`;
-
-  const remainingAmount = targetAmount - totalAmount;
-  remainingAmountElement.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(remainingAmount)}`;
-}
-
-function setTarget() {
-  const targetInput = document.getElementById('targetAmount');
-  const targetAmountElement = document.getElementById('targetAmountDisplay');
-
-  if (targetInput.value !== '') {
-    targetAmount = parseFloat(targetInput.value.replace('.', ''));
-    targetAmountElement.textContent = `Rp ${new Intl.NumberFormat('id-ID').format(targetAmount)}`;
-    updateTotals();
-    
-    // Tambahkan baris berikut untuk menyimpan nilai targetAmount di localStorage
-    localStorage.setItem('targetAmount', targetAmount.toString());
-    
-    // Tambahkan baris berikut untuk mengosongkan kotak input
-    targetInput.value = '';
-  } else {
-    alert('Masukkan jumlah target cicilan.');
-  }
-}
-
-// Hapus fungsi handleTargetInput
-// function handleTargetInput() {
-//   const targetInput = document.getElementById('targetAmount');
-//   updateTargetDisplay(targetInput.value);
-// }
-
-loadFromLocalStorage();
+window.onload = function() {
+  updatePaymentList();
+};
